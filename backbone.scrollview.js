@@ -1,74 +1,52 @@
-define(['backbone.collectionview'], function(CollectionView) {
+define(['backbone'], function(Backbone) {
 
 
-	var InfiniteView = Backbone.InfiniteView = CollectionView.extend({
+	var ScrollView = Backbone.View.extend({
 		initialize: function(options) {
-			_.bindAll(this, '_handleScroll','more');
+			_.bindAll(this,'_handleScroll','handleScroll');
 
 			/**
 			 * Configure the frame.
 			 */
-			this.frame = options.frame || $(window);
-			this.frame.scroll(this._handleScroll);
+			this.$frame = options.frame || this.$el;
+			this.$frame.scroll(this._handleScroll);
 
-			/**
-			 * options
-			 */
-			this.options = options;
+			this.status = options.activated ? 'activated' : 'deactivated';
+		},
 
-			this.status = 'deactivated';
+		_handleScroll: function(e) {
+
+			if (this.status === 'deactivated') { return false; }
+
+			var data = {
+				frameTop: this.$frame.scrollTop(),
+				frameHeight: this.$frame.height(),
+			};
+
+			this.handleScroll(e, data);
 		},
 
 		/** 
 		 * Event handler
 		 */
-		_handleScroll: function(e) {
-
-			// only do stuff if the current page is 'artworks'
-
-			var frameTop = this.frame.scrollTop(),
-				frameHeight = this.frame.height(),
-				docHeight = $('html').height(),
-				triggerDistance = typeof this.options.triggerDistance !== 'undefined' ? this.options.triggerDistance : docHeight - 2 * frameHeight;
-
-			if (frameTop + frameHeight > triggerDistance && this.status === 'activated') {
-				this.more();
-			}
-/*
-
-			console.log('top');
-			console.log(frameTop)
-			console.log(frameHeight)
-			console.log(docHeight)
-
-*/
-		},
-
-		/**
-		 * Method to be overwritten.
-		 */
-		more: function() {
-			alert('Overwrite this function.')
+		handleScroll: function(e, data) {
+			console.log(data);
 		},
 
 		/**
 		 * API
 		 */
 
-		/**
-		 * Deactivate artworks_pool view
-		 */
 		deactivate: function() {
+			this.trigger('deactivate', this);
 			this.status = 'deactivated';
 		},
 
-		/**
-		 * Activate artworks_pool view
-		 */
 		activate: function() {
+			this.trigger('activate', this);
 			this.status = 'activated';
 		},
 	});
 
-	return InfiniteView;
+	return ScrollView;
 });

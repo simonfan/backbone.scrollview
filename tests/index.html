@@ -15,12 +15,28 @@
 	</script>
 
 	<script type="text/javascript" data-main="main.js" src="components/requirejs/require.js"></script>
+
+
+	<style type="text/css">
+		.content {
+			height: 1000px;
+		}
+
+		#content-1 {
+			background-color: red;
+		}
+
+		#content-2 {
+			background-color: blue;
+		}
+	</style>
 	
 </head>
 
 <body>	
-
-	This is index.html, running demo, using the component.css stylesheet.
+	
+	<div id="content-1" class="content"></div>
+	<div id="content-2" class="content"></div>
 
 	<br>
 	<a href="tests.html">Go to unit tests</a>
